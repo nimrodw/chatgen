@@ -25,6 +25,9 @@ def setup_logger(path_to_log_file):
 
 if __name__ == '__main__':
     logger = setup_logger(path_to_log_file="logs/log.log")
+    pd.set_option('display.max_rows', 500)
+    pd.set_option('display.max_columns', 500)
+    pd.set_option('display.width', 1000)
     # load data
     files = glob.glob("data/raw/*.txt")
     out_dir = "data/processed/all_data.csv"
@@ -43,7 +46,18 @@ if __name__ == '__main__':
     print("Memory Usage: \n", df.memory_usage())
     print("Dataframe Length: ", len(df))
 
+    # gather some statistics on the data
+    # max/min length of messages
+    # chain messages, messages in a row?
+    # most talked to person
+    # reply times of messages?
+    # do this in a jupyter notebook so it will look nice
+
     # preprocess data
+    # ideas: remove carriage returns, non text/ascii details
+    # remove punctuation??? but probably not
+    # remove whatsapp features like "MEDIA SENT" etc.
+
 
     # input data into network
     # train network
