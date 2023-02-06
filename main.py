@@ -30,7 +30,7 @@ if __name__ == '__main__':
     pd.set_option('display.width', 1000)
     # load data
     files = glob.glob("data/raw/*.txt")
-    out_dir = "data/processed/all_data.csv"
+    out_dir = "data/processed/all_data_datetime.csv"
     # process_data.messages_to_dataframe('data/raw/WhatsApp Chat mit JB.txt')
     logger.info("Loading data")
     if not os.path.isfile(out_dir):

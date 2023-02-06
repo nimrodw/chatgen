@@ -1,5 +1,6 @@
 import numpy as np
 import re
+from datetime import datetime
 from multiprocessing import Pool
 from langdetect import detect
 import pandas as pd
@@ -8,9 +9,16 @@ import time
 
 
 def read_line_from_txt(line):
-    datetime = line[:15]
+    regex_date = "^[^-]*"
+
+    datetime_str = line[:15]
     sender = line[18:].split(':')[0]
     text = ''.join(line[15:].split(':')[1:])  # just string, no list
+    try:
+        datetime_obj = datetime.strptime(datetime_str, "%d.%m.%y, %H:%M")
+    except:
+        # has a problem with some lines where the format doesn't fit, best to just ignore those for now
+        return None
     try:
         lang = detect(text)
     except:
@@ -18,7 +26,7 @@ def read_line_from_txt(line):
         a = 2
     else:
         if lang != 'he':
-            return datetime, sender, text
+            return datetime_obj, sender, text
 
 
 def messages_to_dataframe(file):
