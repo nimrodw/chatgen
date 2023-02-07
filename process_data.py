@@ -14,19 +14,19 @@ def read_line_from_txt(line):
     datetime_str = line[:15]
     sender = line[18:].split(':')[0]
     text = ''.join(line[15:].split(':')[1:])  # just string, no list
-    try:
-        datetime_obj = datetime.strptime(datetime_str, "%d.%m.%y, %H:%M")
-    except:
-        # has a problem with some lines where the format doesn't fit, best to just ignore those for now
-        return None
+    # try:
+    #     datetime_obj = datetime.strptime(datetime_str, "%d.%m.%y, %H:%M")
+    # except:
+    #     # has a problem with some lines where the format doesn't fit, best to just ignore those for now
+    #     return None
     try:
         lang = detect(text)
     except:
         # print("Could not detect language in text: ", text)
         a = 2
     else:
-        if lang != 'he':
-            return datetime_obj, sender, text
+        # if lang != 'he':
+        return datetime_str, sender, text
 
 
 def messages_to_dataframe(file):
