@@ -27,18 +27,9 @@ def read_line_from_txt(line):
     sender = line[18:].split(':')[0]
     text = ''.join(line[15:].split(':')[1:])  # just string, no list
 
-    if "<Medien ausgeschlossen>" in text:
+    whatsapp_words = ["<Medien ausgeschlossen>", "Nachricht", "Verpasster", "Datei angehängt", "gelöscht", "Anrufe"]
+    if any(ww in text for ww in whatsapp_words):
         return None
-
-    """
-    Remove all lines containing:
-    - Nachricht containing
-    - Verpasster Sprachanruf
-    - Verpasster Gruppen-Videoanruf
-    - (Datei angehängt)
-    - gelöscht
-    - Nachrichten und Anrufe sind Ende...
-    """
 
     # remove newlines
     text = text.replace('\n', '')
