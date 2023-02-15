@@ -30,7 +30,7 @@ if __name__ == '__main__':
     pd.set_option('display.width', 1000)
     # load data
     files = glob.glob("data/raw/*.txt")
-    out_dir = "data/processed/all_data_1.csv"
+    out_dir = "data/processed/all_data.csv"
     # process_data.messages_to_dataframe('data/raw/WhatsApp Chat mit JB.txt')
     logger.info("Loading data")
     if not os.path.isfile(out_dir):
@@ -43,6 +43,7 @@ if __name__ == '__main__':
         df = pd.read_csv(out_dir)
         df.reset_index()
     df = df.drop(df.columns[0], axis=1)
+    print(df.iloc[4500:4510])
     print("Memory Usage: \n", df.memory_usage())
     print("Dataframe Length: ", len(df))
 

@@ -10,23 +10,58 @@ import time
 
 def read_line_from_txt(line):
     regex_date = "^[^-]*"
-
+    regex_simplifier = {
+        '%Y': r'(?P<year>\d{2,4})',
+        '%y': r'(?P<year>\d{2,4})',
+        '%m': r'(?P<month>\d{1,2})',
+        '%d': r'(?P<day>\d{1,2})',
+        '%H': r'(?P<hour>\d{1,2})',
+        '%I': r'(?P<hour>\d{1,2})',
+        '%M': r'(?P<minutes>\d{2})',
+        '%S': r'(?P<seconds>\d{2})',
+        '%P': r'(?P<ampm>[AaPp].? ?[Mm].?)',
+        '%p': r'(?P<ampm>[AaPp].? ?[Mm].?)',
+        '%name': fr'(?P<USERNAME>[^:]*)'
+    }
     datetime_str = line[:15]
     sender = line[18:].split(':')[0]
     text = ''.join(line[15:].split(':')[1:])  # just string, no list
+
+    if "<Medien ausgeschlossen>" in text:
+        return None
+
+    """
+    Remove all lines containing:
+    - Nachricht containing
+    - Verpasster Sprachanruf
+    - Verpasster Gruppen-Videoanruf
+    - (Datei angehängt)
+    - gelöscht
+    - Nachrichten und Anrufe sind Ende...
+    """
+
+    # remove newlines
+    text = text.replace('\n', '')
+    # remove urls:
+    text = re.sub('http://\S+|https://\S+', '', text)
+    text = re.sub('http[s]?://\S+', '', text)
+    text = re.sub(r"http\S+", "", text)
+
+
     # try:
     #     datetime_obj = datetime.strptime(datetime_str, "%d.%m.%y, %H:%M")
     # except:
     #     # has a problem with some lines where the format doesn't fit, best to just ignore those for now
     #     return None
-    try:
-        lang = detect(text)
-    except:
-        # print("Could not detect language in text: ", text)
-        a = 2
-    else:
-        # if lang != 'he':
-        return datetime_str, sender, text
+
+    # try:
+    #     lang = detect(text)
+    # except:
+    #     # print("Could not detect language in text: ", text)
+    #     a = 2
+    # else:
+    #     # if lang != 'he':
+    return datetime_str, sender, text
 
 
 def messages_to_dataframe(file):
@@ -68,6 +103,7 @@ def read_files(files, out_dir):
     print(dfs[-1].head(10))
     print("Read and processed ", len(dfs), " Whatsapp chats")
     data = pd.concat(dfs)
-    data.reset_index()
+    data = data.reset_index()
+    data = data.drop(data.columns[0], axis=1)
     data.to_csv(out_dir)
     return data
